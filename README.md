@@ -24,6 +24,32 @@ Lojistik operasyonlarında en kritik unsur maliyet, kapasite doluluk oranı ve e
 
 ---
 
+## 🧠 Nasıl Çözdük? Maliyeti Nasıl Düşürdük? (Derinlemesine Stratejik Analiz)
+
+Sistemimizdeki **4.6 Milyon TL net tasarruf**, rastgele sezgisel yaklaşımlarla değil, tamamen matematiksel modelleme ve operasyonel esneklik entegrasyonuyla elde edilmiştir. İşte maliyeti radikal şekilde düşüren **4 ana kaldıraç**:
+
+### 1. Kiralık Araç Havuzunun Dinamik Kaydırılması (CP-SAT)
+* **Eski Durum:** Kiralık (özmal) araçlar, güzergahlara sabit olarak tanımlanmıştı. Örneğin, İstanbul-Manisa hattında o gün talep olmasa bile kiralık tır boş yatıyor veya düşük kapasiteyle çalışıyordu. Diğer yandan yoğun olan İstanbul-İzmir hattı için çok pahalıya dışarıdan spot araç kiralanıyordu.
+* **Nasıl Çözdük?** Kiralık araçları belirli hatlara çakılı olmaktan kurtarıp **tek bir havuzda** birleştirdik. **Google OR-Tools CP-SAT** yapay zeka solver'ı, her günün talebine göre bu kiralık araçları dinamik olarak en yüksek tasarruf potansiyeli (Spot maliyeti ile kiralık maliyeti arasındaki farkın en yüksek olduğu yer) olan hatlara atadı. 
+* **Sonuç:** Kiralık araçların boş yatması engellendi ve araç verimliliği %100'e çıkarıldı. Sistem otomatik olarak **"Filo Kaydırma"** planı üreterek operasyonu yönlendirdi.
+
+### 2. Çok Duraklı Rota Optimizasyonu (Multi-Drop VRP)
+* **Eski Durum:** Her araç sadece tek bir çıkıştan tek bir varışa (Point-to-Point) doğrudan gidip dönüyordu. Bu durum, düşük hacimli talepler için bile ayrı ayrı araç kaldırılmasına ve yüksek maliyete neden oluyordu.
+* **Nasıl Çözdük?** Araçların yol üstündeki veya birbirine yakın birden fazla transfer merkezine uğrayarak yük bırakabilmesini sağlayan **Çok Duraklı (Multi-Drop) Rotalama (Vehicle Routing Problem - VRP)** modelini entegre ettik.
+* **Sonuç:** Ayrı ayrı gidecek 2-3 kamyonetin işi, rotası optimize edilmiş tek bir büyük Tır ile çözüldü. Rota mesafeleri kısalırken araç doluluk oranları maksimize edildi.
+
+### 3. Akıllı Araç Boyutlandırma ve Paketleme (ILP)
+* **Eski Durum:** Hangi hat için hangi araç boyutunun seçileceği sezgisel yapılıyordu.
+* **Nasıl Çözdük?** Tır, Kamyon, Hafif Kamyon ve Kamyonet tiplerinin birim desi maliyetlerini (TL/Desi) matematiksel olarak çıkardık. En yüksek kapasiteli ve en ekonomik birim maliyete sahip büyük araçları (Tır) maksimum düzeyde doldurarak taban yükleri erittik. Kalan küçük artık hacimler için ise esnek, düşük sabit maliyetli kamyonetleri tercih ettik.
+* **Sonuç:** Boş hacim taşıma maliyeti minimize edildi.
+
+### 4. Saf Finansal Minimizasyon ve Heuristic Ayıklama
+* **Eski Durum:** Yapay zekaya "Desi x Kilometre" gibi yapay cezalar verilerek kararlar manipüle edilmeye çalışılıyordu. Bu durum solver'ı şaşırtarak maliyeti 52.3 Milyon TL'ye yükseltmişti (zarar).
+* **Nasıl Çözdük?** Solver'ın önündeki tüm yapay kısıt ve matematiksel formül gürültülerini kaldırıp, doğrudan **"Toplam TL Maliyetini"** minimize etmesini sağladık.
+* **Sonuç:** Solver tam serbestlikle çalışarak matematiksel olarak kanıtlanmış **kusursuz kar-maliyet dengesine (45.8 Milyon TL)** ulaştı.
+
+---
+
 ## 🛠️ Teknolojik Altyapı ve Matematiksel Modeller
 
 Sistemimiz iki temel optimizasyon motorunun entegre çalışmasıyla kurulmuştur:
