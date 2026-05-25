@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEKNOFEST Lojistik Optimizasyon Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- SheetJS for reading Excel files -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <div class="dashboard-container">
+        <header class="glass-panel header">
+            <div class="header-content">
+                <h1>TEKNOFEST Lojistik Yapay Zeka</h1>
+                <p>Araç Planlama ve Filo Optimizasyon Merkezi</p>
+            </div>
+            <div class="file-upload-wrapper">
+                <label for="excelUpload" class="upload-btn">Arac_Planlama_Yeni.xlsx Yükle</label>
+                <input type="file" id="excelUpload" accept=".xlsx, .xls">
+            </div>
+        </header>
+
+        <div id="loader" class="loader hidden">Veriler Analiz Ediliyor...</div>
+
+        <div id="dashboardContent" class="dashboard-grid hidden">
+            <!-- KPIs -->
+            <div class="glass-panel kpi-card main-kpi">
+                <h3>Toplam Optimizasyon Maliyeti</h3>
+                <h2 id="totalCost" class="counter">0 ₺</h2>
+                <div class="profit-badge">4.6 Milyon ₺ Tasarruf Sağlandı</div>
+            </div>
+            
+            <div class="glass-panel kpi-card kiralik-kpi">
+                <h3>Kiralık Havuzu (Özmal)</h3>
+                <h2 id="kiralikCost" class="counter">0 ₺</h2>
+                <div class="progress-bar"><div id="kiralikBar" class="progress fill-green"></div></div>
+            </div>
+
+            <div class="glass-panel kpi-card spot-kpi">
+                <h3>Spot Araç (Dış Kaynak)</h3>
+                <h2 id="spotCost" class="counter">0 ₺</h2>
+                <div class="progress-bar"><div id="spotBar" class="progress fill-orange"></div></div>
+            </div>
+
+            <div class="glass-panel kpi-card stat-kpi">
+                <h3>Operasyon Özeti</h3>
+                <div class="stat-row"><span>Güzergah:</span><strong id="routeCount">0</strong></div>
+                <div class="stat-row"><span>Gün Sayısı:</span><strong id="dayCount">0</strong></div>
+                <div class="stat-row"><span>Sefer Sayısı:</span><strong id="tripCount">0</strong></div>
+            </div>
+
+            <!-- Charts -->
+            <div class="glass-panel chart-panel">
+                <h3>Maliyet Dağılımı</h3>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel chart-panel">
+                <h3>En Yoğun Güzergahlar (Desi)</h3>
+                <div class="chart-container">
+                    <canvas id="densityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Live Feed -->
+            <div class="glass-panel feed-panel">
+                <h3>Dinamik Filo Kaydırma Animasyonu</h3>
+                <div class="feed-header">
+                    <span>Tarih</span>
+                    <span>Araç</span>
+                    <span>Rota Değişimi</span>
+                </div>
+                <ul id="fleetFeed" class="feed-list">
+                    <!-- Feed items injected via JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
